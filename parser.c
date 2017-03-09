@@ -62,11 +62,10 @@ void parse_file ( char * filename,
         char params[256];
         clear_screen(s);
 
-        /*if ( strcmp(filename, "stdin") == 0 )
+        if ( strcmp(filename, "stdin") == 0 )
         f = stdin;
         else
-        f = fopen(filename, "r");*/
-        f = fopen(filename,"rw");
+        f = fopen(filename, "r");
 
         while ( fgets(line, 255, f) != NULL ) {
             line[strlen(line)-1]='\0';
@@ -75,108 +74,94 @@ void parse_file ( char * filename,
 
 
             //line
-            if( strcmp(line,"line") ){
+            if( strcmp(line,"line") == 0 ){
                 fgets(params,255,f);
-                printf("params: %s\n",params);
 
-                int l[6];
+                char *l[6];
                 int i;
-                char * s = strtok(params," ");
+                char *s = strtok(params," ");
                 for (i = 0; i < 6; i++){
-                    //printf("%s\n",s);
                     l[i] = s;
                     s = strtok(NULL, " ");
                 }
 
-                for (i = 0; i < 6; i++){
-                    printf("%s",l[i]);
-                }
-                printf("\n");
+                /*for (i = 0; i < 6; i++){
+                printf("%s ",l[i]);
+            }*/
 
-                add_edge(edges,l[0],l[1],l[2],l[3],l[4],l[5]);
-            }
-            //ident
-            else if ( strcmp(line, "ident") ){
-                ident(transform);
-            }
-
-            //scale
-            else if ( strcmp(line, "scale") ){
-                fgets(params,255,f);
-                int l[3];
-                int i;
-                char * s = strtok(params," ");
-                for (i = 0; i < 3; i++){
-                    params[i] = s;
-                    s = strtok(NULL, " ");
-                }
-
-                matrix_mult(make_scale(l[0],l[1],l[2]),transform);
-            }
-
-            //move
-            else if ( strcmp(line, "move") ){
-                fgets(params,255,f);
-                int l[3];
-                int i;
-                char * s = strtok(params," ");
-                for (i = 0; i < 3; i++){
-                    params[i] = s;
-                    s = strtok(NULL, " ");
-                }
-
-                matrix_mult(make_translate(l[0],l[1],l[2]),transform);
-            }
-
-            //rotate
-            else if ( strcmp(line, "rotate") ){
-                fgets(params,255,f);
-                int l[2];
-                int i;
-                char * s = strtok(params," ");
-                for (i = 0; i < 2; i++){
-                    params[i] = s;
-                    s = strtok(NULL, " ");
-                }
-
-                if(strcmp(l[0],'x') == 0){
-                    matrix_mult(make_rotX(l[1]),transform);
-                }
-
-                else if (strcmp(l[1],'y')==0){
-                    matrix_mult(make_rotY(l[1]),transform);
-                }
-                else{
-                    matrix_mult(make_rotZ(l[1]),transform);
-                }
-
-            }
-
-            //apply
-            else if ( strcmp(line, "apply") ){
-                matrix_mult(transform,edges);
-                color c;
-                c.red=255;
-                c.blue=0;
-                c.green=0;
-                draw_lines(edges,s,c);
-            }
-
-            //display
-            else if ( strcmp(line,"display") ){
-                display(s);
-            }
-
-            //save
-            else if ( strcmp(line,"save") ){
-                fgets(params,255,f);
-                save_extension(s,params);
-            }
-
-            else{
-                printf("error\n");
-            }
+            add_edge(edges,atof(l[0]),atof(l[1]),atof(l[2]),atof(l[3]),atof(l[4]),atof(l[5]));
+        }
+        //ident
+        else if ( strcmp(line, "ident") == 0 ){
+            ident(transform);
         }
 
+        //scale
+        else if ( strcmp(line, "scale") == 0 ){
+            fgets(params,255,f);
+            char *l[3];
+            int i;
+            char * s = strtok(params," ");
+            for (i = 0; i < 3; i++){
+                l[i] = s;
+                s = strtok(NULL, " ");
+            }
 
+            matrix_mult(make_scale(atof(l[0]),atof(l[1]),atof(l[2])),transform);
+        }
+
+        //move
+        else if ( strcmp(line, "move") == 0){
+            fgets(params,255,f);
+            char *l[3];
+            int i;
+            char * s = strtok(params," ");
+            for (i = 0; i < 3; i++){
+                l[i] = s;
+                s = strtok(NULL, " ");
+            }
+
+            matrix_mult(make_translate(atof(l[0]),atof(l[1]),atof(l[2])),transform);
+        }
+
+        //rotate
+        else if ( strcmp(line, "rotate") == 0 ){
+            fgets(params,255,f);
+            if (strcmp(&params[0],"x") ==0){
+                matrix_mult(make_rotX(atof(strtok(params," "))),transform);
+            }
+            else if (strcmp(&params[0],"y") == 0){
+                matrix_mult(make_rotY(atof(strtok(params," "))),transform);
+            }
+            else{
+                matrix_mult(make_rotZ(atof(strtok(params," "))),transform);
+            }
+
+        }
+
+        //apply
+        else if ( strcmp(line, "apply") == 0){
+            matrix_mult(transform,edges);
+            color c;
+            c.red=255;
+            c.blue=0;
+            c.green=0;
+            draw_lines(edges,s,c);
+        }
+
+        //display
+        else if ( strcmp(line,"display") == 0){
+            display(s);
+        }
+
+        //save
+        else if ( strcmp(line,"save") == 0){
+            fgets(params,255,f);
+            save_extension(s,params);
+        }
+
+        else{
+            printf("error\n");
+        }
     }
+}

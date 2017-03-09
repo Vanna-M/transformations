@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     parse_file( argv[1], transform, edges, s );
     else
         //parse_file( "stdin", transform, edges, s );*/
-    parse_file("s2",transform,edges,s);
+    parse_file("script",transform,edges,s);
 
 
     //display(s);
