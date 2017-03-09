@@ -124,6 +124,7 @@ struct matrix * make_rotZ(double theta) {
     ident(d);
 
     double r = theta * M_PI/180;
+    printf("expects 0: %f\n",r - (M_PI/2));
 
     /*
     | cos(theta) -sin(theta) 0 0 |
@@ -136,6 +137,9 @@ struct matrix * make_rotZ(double theta) {
     d->m[0][1] = -sin(r);
     d->m[1][0] = sin(r);
     d->m[1][1] = cos(r);
+
+    print_matrix(d);
+    printf("cos: %f, sin: %f\n",cos(r),sin(r));
 
     return d;
 }

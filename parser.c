@@ -134,7 +134,8 @@ void parse_file ( char * filename,
                 matrix_mult(make_rotY(atof(strtok(params," "))),transform);
             }
             else{
-                matrix_mult(make_rotZ(atof(strtok(params," "))),transform);
+                //matrix_mult(make_rotZ(atof(strtok(params," "))),transform);
+                matrix_mult(make_rotZ(90),transform);
             }
 
         }
